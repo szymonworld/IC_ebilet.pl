@@ -1,0 +1,110 @@
+﻿@model IEnumerable<IC_ebilet.pl.ViewModel.TCategoryViewModel>
+
+@{
+    ViewBag.Title = "Panel";
+}
+
+@section Banner {
+    <div class="header header-filter headerTopBack" style="background-image: url(../../Content/img/cody-aulidge-194218.jpg);  padding:100px">
+        <div class="container"><h1 style="color: white;">Panel</h1></div>
+    </div>
+}
+<h2>Tablica Ulubionych Kategorii</h2>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.likes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dislikes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.avr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.precents)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ban)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.likes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dislikes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.avr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.precents)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ban)
+            </td>
+        </tr>
+    }
+</table>
+    <h2>Tablica Ulubionych Podkategorii</h2>
+    <table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.likes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dislikes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.avr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.precents)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ban)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in ViewBag.SubCategory)
+    {
+        <tr>
+            <td>
+                @item.title
+            </td>
+            <td>
+                @item.likes
+            </td>
+            <td>
+                @item.dislikes
+            </td>
+            <td>
+                @item.avr
+            </td>
+            <td>
+                @item.precents
+            </td>
+            <td>
+                @item.ban
+            </td>
+        </tr>
+    }
+</table>
+
+
+   

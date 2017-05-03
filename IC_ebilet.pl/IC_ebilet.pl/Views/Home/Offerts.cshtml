@@ -1,0 +1,90 @@
+﻿@model IC_ebilet.pl.ViewModel.EventViewModel
+
+@{ ViewBag.Title = "Offerts";
+}
+@{
+    string tileType = "";
+}
+
+<br>
+<br>
+@section Banner {
+    <div class="header header-filter headerTopBack" style="background-image: url(../../Content/img/cody-aulidge-194218.jpg);  padding:100px">
+
+        <div class="container"><h1 style="color: white;">Wszystkie wydarzenia</h1></div>
+
+    </div>
+
+
+}
+
+@using (Html.BeginForm("GetItem", "Home"))
+{
+    <div class="row">
+
+        @foreach (var item in ViewBag.test2)
+        {
+            {
+                tileType = item.State == true ? "panel-warning" : "panel-info";
+            }
+
+            <div class="item col-xs-6 col-sm-4 bg-info">
+                <div class="thumbnail">
+                    <img class="group list-group-image img-rounded" src="@item.BannerLink" alt="" />
+                    <div class="caption">
+                        <div class="control-group" style="margin-bottom:10px">
+                            <span class="label label-info">@item.Category</span>
+                            <span class="label label-default">@item.SubCategory</span>
+                        </div>
+                        <div class="panel @tileType">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#@item.Id">
+                                        @item.Title
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="@item.Id" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    @item.Description
+                                </div>
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td> Cena:</td>
+                                            <td>@item.Price</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td> Lokalizacja:</td>
+
+                                            <td>@item.Location</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Data:</td>
+
+                                            <td>@item.Date</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="container">
+                                    <div class="text-center">
+                                        @Html.ActionLink("Lubie", "Like", new { id = item.Id }, new { @class = "sharing-area btn btn-success btn-round btn-tooltip" })
+                                        @Html.ActionLink("Nie lubie", "Unlike", new { id = item.Id }, new { @class = "sharing-area btn btn-danger btn-round" })
+                                        @*<a id="modal-898231" href="@item.Link" role="button" class="btn btn-success col-md-12" data-toggle="modal">Link</a>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+
+
+

@@ -1,0 +1,196 @@
+﻿@model IC_ebilet.pl.ViewModel.EventViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+
+
+    @section Banner {
+        <div class="header header-filter headerTopBack" style="background-image: url(../../Content/img/cody-aulidge-194218.jpg);  padding:100px">
+
+            <div class="container"><h1 style="color: white;">Wybrane wydarzenia</h1></div>
+
+        </div>
+
+
+    }
+
+    using (Html.BeginForm("GetItem", "Home"))
+    {
+
+
+        <div class="container">
+            <div class="row" style="padding-top:150px; max-width: 1400px;">
+                <div class="card card-signup" style="opacity:0.9; padding-bottom:20px; ">
+                    <div class="header header-info text-center">
+                        <h4>Muzyka</h4>
+                    </div>
+                    <div class="content">
+                        <div class="row">
+                            @foreach (var item in ViewBag.WszystkieKategorie)
+                            {
+                                <div class="item col-xs-6 col-sm-4 bg-info">
+                                    <div class="thumbnail">
+                                        <img class="group list-group-image img-rounded" src="@item.BannerLink" alt="" />
+                                        <div class="caption">
+                                            <div class="control-group" style="margin-bottom:10px">
+                                                <span class="label label-info">@item.Category</span>
+                                                <span class="label label-default">@item.SubCategory</span>
+                                            </div>
+                                            <div class="panel panel-success">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#@item.Id">
+                                                            @item.Title
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="@item.Id" class="panel-collapse collapse">
+                                                    <div class="panel-body">
+                                                        @item.Description
+                                                    </div>
+                                                    <table class="table table-striped">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td> Cena:</td>
+                                                                <td>@item.Price</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td> Lokalizacja:</td>
+
+                                                                <td>@item.Location</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Data:</td>
+
+                                                                <td>@item.Date</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <div class="container">
+                                                        <div class="text-center">
+                                                            @Html.ActionLink("Lubie", "Like", new { id = item.Id }, new { @class = "sharing-area btn btn-success btn-round btn-tooltip" })
+                                                            @Html.ActionLink("Nie lubie", "Unlike", new { id = item.Id }, new { @class = "sharing-area btn btn-danger btn-round" })
+                                                            @*<a id="modal-898231" href="@item.Link" role="button" class="btn btn-success col-md-12" data-toggle="modal">Link</a>*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="row" style="padding-top:150px; max-width: 1400px;">
+                <div class="card card-signup" style="opacity:0.9; padding-bottom:20px; ">
+                    <div class="header header-info text-center">
+                        <h4>Teatr</h4>
+                    </div>
+                    <div class="content">
+                        <div class="row">
+                            @foreach (var item in ViewBag.SliderEvents)
+                        {
+                        <div class="item col-xs-6 col-sm-4 bg-info">
+                            <div class="thumbnail">
+                                <img class="group list-group-image img-rounded" src="@item.BannerLink" alt="" />
+                                <div class="caption">
+                                    <div class="control-group" style="margin-bottom:10px">
+                                        <span class="label label-info">@item.Category</span>
+                                        <span class="label label-default">@item.SubCategory</span>
+                                    </div>
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#@item.Id">
+                                                    @item.Title
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="@item.Id" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                @item.Description
+                                            </div>
+                                            <table class="table table-striped">
+                                                <tbody>
+                                                    <tr>
+                                                        <td> Cena:</td>
+                                                        <td>@item.Price</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td> Lokalizacja:</td>
+
+                                                        <td>@item.Location</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Data:</td>
+
+                                                        <td>@item.Date</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <div class="container">
+                                                <div class="text-center">
+                                                    @Html.ActionLink("Lubie", "Like", new { id = item.Id }, new { @class = "sharing-area btn btn-success btn-round btn-tooltip" })
+                                                    @Html.ActionLink("Nie lubie", "Unlike", new { id = item.Id }, new { @class = "sharing-area btn btn-danger btn-round" })
+                                                    @*<a id="modal-898231" href="@item.Link" role="button" class="btn btn-success col-md-12" data-toggle="modal">Link</a>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    @section Banner {
+            <div class="header header-filter fullscreen" style=" background-image: url(../../Content/img/cody-aulidge-194218.jpg);">
+                <div class="container" style="margin-top:150px;">
+                    <div class="wrapper">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6 col-md-offset-5" style="color:white">
+                                        <h1 class="title" style="color:white"><b>e-bilet.pl - Inteligentne treści</b></h1>
+                                        <h4 style="color:white">eBilet.pl to lider internetowej sprzedaży biletów w branży kulturalno – rozrywkowej w Polsce. Współpracujemy z największymi krajowymi i międzynarodowymi organizatorami imprez, świadcząc usługi sprzedaży indywidualnej, korporacyjnej, a także promocji i kompleksowej obsługi imprez. Oferujemy systemy sprzedaży biletów i kontroli wejść na wszystkie wydarzenia kulturalne i sportowe. Udostępniamy naszym organizatorom i partnerom kompletne rozwiązania technologiczne do bieżącej edycji oraz śledzenia trendów sprzedaży. Jesteśmy pionierem nowoczesnych technologii dla rynku e – commerce.
+</h4>
+                                        <br />
+                                        @Html.ActionLink("Zaloguj", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "sharing-area btn btn-info btn-round" })
+
+    
+                                        @Html.ActionLink("Zarejestruj", "Register", "Account", routeValues: null, htmlAttributes: new { @class = "sharing-area btn btn-info btn-round" })
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                }
+}
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+
+    }*@
