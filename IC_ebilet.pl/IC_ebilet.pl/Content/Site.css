@@ -4102,8 +4102,10 @@ h2.title {
         z-index: 2;
         position: relative;
     }
-
-.gallery .image img {
+.header-filterFIXED:after {
+    position: fixed;
+}
+        .gallery .image img {
     width: 100%;
 }
 
@@ -4301,4 +4303,9 @@ h2.title {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position:  center right ;
+}
+
+.White-Background {
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
 }

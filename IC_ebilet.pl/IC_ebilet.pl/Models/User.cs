@@ -14,5 +14,6 @@ namespace IC_ebilet.pl.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public virtual Favourite Favourite { get; set; }
+        public virtual List<int> BannedEventID { get; set; }
     }
 }

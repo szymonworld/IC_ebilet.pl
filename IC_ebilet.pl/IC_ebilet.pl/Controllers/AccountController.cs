@@ -100,21 +100,17 @@ namespace IC_ebilet.pl.Controllers
                     }
                 }
                 Favourite Favnew = new Favourite() { FavCategory = category, SubCategory = subcategory };
-                //Favourite dest = Mapper.Map<FavouriteViewModel, Favourite>(CreateFav);
+                List<int> Banned = new List<int>();
                 using (var db = new SystemContext())
                 {
                     if (!db.Users.Any(n=>n.Email == userVM.Email))
                     {
-                        db.Users.Add(new User { Email = userVM.Email, Password = userVM.Password, Favourite = Favnew });
+                        db.Users.Add(new User { Email = userVM.Email, Password = userVM.Password, Favourite = Favnew, BannedEventID = Banned });
                         db.SaveChanges();
                     }
                 }
-                
                 ModelState.Clear();
             }
-
-
-            //Users.Add(newUser);
             return View();
         }
 

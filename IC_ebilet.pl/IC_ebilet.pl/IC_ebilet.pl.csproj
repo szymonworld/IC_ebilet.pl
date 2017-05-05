@@ -167,6 +167,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\LogInOperation.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\Favourite.cs" />
     <Compile Include="Models\Parser.cs" />

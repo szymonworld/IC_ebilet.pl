@@ -4,6 +4,9 @@
 }
 @{
     string tileType = "";
+    string isTaste = "";
+    string tasetColor = "";
+    string sentence = "";
 }
 
 <br>
@@ -11,7 +14,7 @@
 @section Banner {
     <div class="header header-filter headerTopBack" style="background-image: url(../../Content/img/cody-aulidge-194218.jpg);  padding:100px">
 
-        <div class="container"><h1 style="color: white;">Wszystkie wydarzenia</h1></div>
+        <div class="container"><h1 style="color: white; font-family: 'Open Sans', sans-serif">Wszystkie wydarzenia</h1></div>
 
     </div>
 
@@ -27,16 +30,44 @@
             {
                 tileType = item.State == true ? "panel-warning" : "panel-info";
             }
+            {
+                isTaste = User.Identity.IsAuthenticated ? "Ocena: " : "Zaloguj się!";
+            }
+
 
             <div class="item col-xs-6 col-sm-4 bg-info">
-                <div class="thumbnail">
-                    <img class="group list-group-image img-rounded" src="@item.BannerLink" alt="" />
+                <div class="thumbnail" style="padding:0px;">
+                    <img class="group list-group-image" src="@item.BannerLink" alt="" />
                     <div class="caption">
-                        <div class="control-group" style="margin-bottom:10px">
+                        <div class="control-group" style="margin-bottom:0px">
+                            @if(User.Identity.IsAuthenticated)
+                            {
+                                if (@item.TasteOfUser >=70)
+                                {
+                                    tasetColor = "label-success";
+                                }
+                                else if ((@item.TasteOfUser < 70) && (@item.TasteOfUser > 30))
+                                {
+                                    tasetColor = "label-warning";
+                                }
+                                else if (@item.TasteOfUser <= 30)
+                                {
+                                    tasetColor = "label-danger";
+                                }
+                            }
                             <span class="label label-info">@item.Category</span>
                             <span class="label label-default">@item.SubCategory</span>
+                            <span class="label @tasetColor pull-right">
+                                    @isTaste
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        sentence = @item.TasteOfUser + "%";
+                                    }
+                                     @sentence
+                            </span>
                         </div>
-                        <div class="panel @tileType">
+                        </div>
+                        <div class="panel @tileType" style="margin-bottom:0;">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#@item.Id">
@@ -78,7 +109,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    
                 </div>
             </div>
         }

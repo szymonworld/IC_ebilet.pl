@@ -18,6 +18,7 @@ namespace IC_ebilet.pl.ViewModel
         [DataType(DataType.Password)]
         public string Password { get; set; }
         public FavouriteViewModel Fav { get; set; }
+        public List<int> BannedEventID { get; set; }
 
     }
     public class UserValidation : AbstractValidator<UserViewModel>

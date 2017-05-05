@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HtmlAgilityPack;
+using IC_ebilet.pl.Helpers;
 using IC_ebilet.pl.Models;
 using IC_ebilet.pl.ViewModel;
 using Microsoft.Ajax.Utilities;
@@ -23,162 +24,77 @@ namespace IC_ebilet.pl.Controllers
         {
 
         }
-        private User Calculation(User user)
+
+        public ActionResult Like(int id)
         {
-            var categories = user.Favourite.FavCategory;
-            var subcategories = user.Favourite.SubCategory;
-            double maxcat = 0;
-            double maxsub = 0;
-            foreach (var item in categories)
-            {
-                maxcat += item.avr;
-            }
-            foreach (var item in categories)
-            {
-                if (item.avr >= 1)
-                {
-                    item.precents = Math.Round((item.avr * 100) / (maxcat), 1);
-                }
-            }
-
-            foreach (var item in subcategories)
-            {
-                maxsub += item.avr;
-            }
-            foreach (var item in subcategories)
-            {
-                if (item.avr >= 1)
-                {
-                    item.precents = Math.Round((item.avr * 100) / (maxsub), 1);
-                }
-            }
-            user.Favourite.FavCategory = categories;
-            user.Favourite.SubCategory = subcategories;
-
-            return user;
-
-        }
-
-        public ActionResult Like(int? id)
-        {
-            using (var db = new SystemContext())
-            {
+            LogInOperation operation = new LogInOperation();
                 if ((id != null) && (!string.IsNullOrEmpty((string)(Session["Email"]))))
                 {
-                    EventViewModel SelectedEvent = Mapper.Map<Event, EventViewModel>(db.Events.Find(id));
-                    string UserEmail = (string)(Session["Email"]);
-                    User CurrentUser = db.Users.Where(n => n.Email == UserEmail).First();
-                    var CurrentCategory = CurrentUser.Favourite.FavCategory.Where(n => n.title == SelectedEvent.Category).First();
-                    var CurrentSubCategory = CurrentUser.Favourite.SubCategory.Where(n => n.title == SelectedEvent.SubCategory).First();
-                    CurrentSubCategory.likes++;
-                    CurrentCategory.likes++;
-                    Avr(CurrentCategory, CurrentSubCategory);
-                    CurrentUser = Calculation(CurrentUser);
-                    db.SaveChanges();
+                operation.LikeOperation(id, (string)(Session["Email"]));
                 }
-            }
             return Redirect(ControllerContext.HttpContext.Request.UrlReferrer.ToString());
         }
         public ActionResult Dislike(int id)
         {
+            LogInOperation operation = new LogInOperation();
             using (var db = new SystemContext())
             {
                 if ((id != null) && (!string.IsNullOrEmpty((string)(Session["Email"]))))
                 {
-                    EventViewModel SelectedEvent = Mapper.Map<Event, EventViewModel>(db.Events.Find(id));
-                    string UserEmail = (string)(Session["Email"]);
-                    User CurrentUser = db.Users.Where(n => n.Email == UserEmail).First();
-                    var CurrentCategory = CurrentUser.Favourite.FavCategory.Where(n => n.title == SelectedEvent.Category).First();
-                    var CurrentSubCategory = CurrentUser.Favourite.SubCategory.Where(n => n.title == SelectedEvent.SubCategory).First();
-                    CurrentSubCategory.dislikes++;
-                    CurrentCategory.dislikes++;
-                    Avr(CurrentCategory, CurrentSubCategory);
-                    CurrentUser = Calculation(CurrentUser);
-                    if ((CurrentCategory.dislikes >= 10) && (CurrentCategory.avr <= 30)) CurrentCategory.ban = true;
-                    if ((CurrentSubCategory.dislikes >= 10) && (CurrentSubCategory.avr <= 30)) CurrentSubCategory.ban = true;
-                    db.SaveChanges();
+                    operation.DislikeOperation(id, (string)(Session["Email"]));
                 }
             }
             return Redirect(ControllerContext.HttpContext.Request.UrlReferrer.ToString());
         }
-        public void Avr(TCategory c, TCategory s)
-        {
-            c.avr = Math.Round(((c.likes + 1.9208) / (c.likes + c.dislikes) - 1.96 * Math.Sqrt((c.likes * c.dislikes) / (c.likes + c.dislikes) + 0.9604) / (c.likes + c.dislikes)) / (1 + 3.8416 / (c.likes + c.dislikes)), 4) * 100;
-            s.avr = Math.Round(((s.likes + 1.9208) / (s.likes + s.dislikes) - 1.96 * Math.Sqrt((s.likes * s.dislikes) / (s.likes + s.dislikes) + 0.9604) / (s.likes + s.dislikes)) / (1 + 3.8416 / (s.likes + s.dislikes)), 4) * 100;
-            // c.avr = ((c.likes + 1.9208) / ( c.likes + c.dislikes)-1.96 * Math.Sqrt((c.likes * c.dislikes)/(c.likes + c.dislikes)+0.9604)/ (c.likes + c.dislikes)) / (1 + 3.8414/ (c.likes + c.dislikes))
-            //if ((CurrentCategory.likes != 0) || (CurrentCategory.dislikes != 0)) CurrentCategory.avr = CurrentCategory.likes / CurrentCategory.dislikes / 2;
-            //if ((CurrentSubCategory.likes != 0) || (CurrentSubCategory.dislikes != 0)) CurrentSubCategory.avr = (CurrentSubCategory.likes + CurrentSubCategory.dislikes) / 2;
-        }
-
-
-
         public async Task<ActionResult> Index()
         {
+            //await SaveEventToDB();
             if ((User.Identity.IsAuthenticated) && (Session["Email"] != null))
-            {
-
-
-                ///await SaveEventToDB();
+            {  
                 using (var db = new SystemContext())
                 {
                     string UserEmail = (string)(Session["Email"]);
                     User SelUser = db.Users.Single(n => n.Email == UserEmail);
                     List<TCategory> UserCategoryRating = SelUser.Favourite.FavCategory;
 
-                    List<string> SelectedCategory = new List<string>();
-                    List<int> SelectedCategoryPrecent = new List<int>();
+                    Dictionary<string, int> SelectedCategory = new Dictionary<string, int>();
+                    //List<string> SelectedCategory = new List<string>();
+                    //List<int> SelectedCategoryPrecent = new List<int>();
                     Category AllCateogory = new Category();
 
                     foreach (var item in AllCateogory.Categorys)
                     {
-                        SelectedCategory.Add(item.Key);
-                        SelectedCategoryPrecent.Add((int)Math.Round(UserCategoryRating.Where(n => n.title == item.Key).Select(n => n.precents).First(), 0) / 10);
+                        SelectedCategory.Add(item.Key, (int)UserCategoryRating.Where(n => n.title == item.Key).Select(n => n.precents).First());
                     }
                     Random rnd = new Random();
                     List<Event> SelectedEvent = new List<Event>();
                     int countPrecent = 0;
-                    foreach (var KURWA in SelectedCategory)
-                    {
-                        string category = KURWA;
-                        for (int i = 0; i < SelectedCategoryPrecent[countPrecent]; i++)
-                        {
-                            int numId = rnd.Next(1, db.Events.Where(n => n.Category == category).Count());
-                            
-                            SelectedEvent.Add(db.Events.Where(n=>n.Category == category).First());
-                           // SelectedEvent.Add(db.Events.Where(n => n.Category == category).Single(m => m.Id == numId));
-                        }
-                        countPrecent++;
-                        ViewBag.WszystkieKategorie = SelectedEvent;
 
+                    foreach (var item in SelectedCategory)
+                    {
+                        int numId = 0;
+                        for (int i = 0; i < item.Value; i++)
+                        {
+                            int start = db.Events.Where(n => n.Category == item.Key).Select(n => n.Id).First();
+                            int end = start + db.Events.Where(n => n.Category == item.Key).Count() -1;
+                            numId = rnd.Next(start, end);
+                            List<Event> e = db.Events.Where(n => n.Category == item.Key.ToString()).ToList();
+                            SelectedEvent.Add(e.Where(n=>n.Id == numId).FirstOrDefault());
+                        }
+                        
                     }
+                    ViewBag.WszystkieKategorie = Mapper.Map<List<Event>, List<EventViewModel>>(SelectedEvent);
                 }
             }
-                
-                    
-
-                //Mapper.Map<Event, EventViewModel>(
-
-
-
-                //List<EventViewModel> SliderEvents = new List<EventViewModel>();
-                //List<EventViewModel> SliderEventsActive = new List<EventViewModel>();
-                //Random rnd = new Random();
-                //for (int i = 0; i < 6; i++)
-                //{
-                //    int numId = rnd.Next(1, db.Events.Count());
-                //    SliderEvents.Add(Mapper.Map<Event, EventViewModel>(db.Events.Where(n => n.Id == numId).First()));
-                //}
-                //for (int i = 0; i < 1; i++)
-                //{
-                //    int numId = rnd.Next(1, db.Events.Count());
-                //    SliderEventsActive.Add(Mapper.Map < Event, EventViewModel> (db.Events.Where(n => n.Id == numId).First()));
-                //}
-                //ViewBag.SliderEvents = SliderEvents;
-                //ViewBag.SliderEventsActive = SliderEventsActive;
                 using (var db = new SystemContext())
                 {
-                    List<EventViewModel> events = Mapper.Map<List<Event>, List<EventViewModel>>(db.Events.Where(n => n.Category == "Muzyka").ToList());
-                    ViewBag.Muzyka = events;
+                if ((User.Identity.IsAuthenticated) && (Session["Email"] != null))
+                {
+                    LogInOperation operation = new LogInOperation();
+                    List<Event> events = db.Events.Where(n => n.Category == "Muzyka").ToList();
+                    operation.TasteCalculation(events, (string)(Session["Email"]));
+                    ViewBag.Muzyka = Mapper.Map<List<Event>, List<EventViewModel>>(events);
+                }
                 }
             return View();
         }
@@ -203,7 +119,6 @@ namespace IC_ebilet.pl.Controllers
                 db.SaveChanges();
             }
         }
-
         public async Task<List<List<EventViewModel>>> GetEvents()
         {
             List<List<EventViewModel>> AllEvents = new List<List<EventViewModel>>();
@@ -218,29 +133,52 @@ namespace IC_ebilet.pl.Controllers
             }
             return AllEvents;
         }
-
         public ActionResult Offerts()
         {
+            LogInOperation operation = new LogInOperation();
             using (var db = new SystemContext())
             {
-                List<EventViewModel> events = Mapper.Map<List<Event>, List<EventViewModel>>(db.Events.ToList());
-                ViewBag.test2 = events;
+                List<Event> events;
+                if ((User.Identity.IsAuthenticated) && (Session["Email"] != null))
+                {
+                    events = db.Events.ToList();
+                    operation.TasteCalculation(events, (string)(Session["Email"]));
+                    ViewBag.test2 = Mapper.Map<List<Event>, List<EventViewModel>>(events);
+                }
+                else
+                {
+                    events = db.Events.ToList();
+                    ViewBag.test2 = Mapper.Map<List<Event>, List<EventViewModel>>(events);
+                }
             }
             return View();
         }
-
         public ActionResult Test()
         {
+            LogInOperation operation = new LogInOperation();
             using (var db = new SystemContext())
             {
-                List<EventViewModel> RandomTest = new List<EventViewModel>();
                 Random rnd = new Random();
-                for (int i = 0; i < 3; i++)
-                {
-                    int numId = rnd.Next(1, db.Events.Count());
-                    RandomTest.Add(Mapper.Map<Event, EventViewModel>(db.Events.Where(n => n.Id == numId).First()));
+                List<Event> RandomEvent = new List<Event>();
+                if ((User.Identity.IsAuthenticated) && (Session["Email"] != null))
+                {      
+                    for (int i = 0; i < 3; i++)
+                    {
+                        int numId = rnd.Next(1, db.Events.Count());
+                        RandomEvent.Add(db.Events.Where(n => n.Id == numId).First());
+                    }
+                    operation.TasteCalculation(RandomEvent, (string)(Session["Email"]));
+                    ViewBag.RandomTest = Mapper.Map<List<Event>, List<EventViewModel>>(RandomEvent);
                 }
-                ViewBag.RandomTest = RandomTest;
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        int numId = rnd.Next(1, db.Events.Count());
+                        RandomEvent.Add(db.Events.Where(n => n.Id == numId).First());
+                    }
+                    ViewBag.RandomTest = Mapper.Map<List<Event>, List<EventViewModel>>(RandomEvent);
+                }
             }
             return View();
         }

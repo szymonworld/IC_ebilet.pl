@@ -28,5 +28,6 @@ namespace IC_ebilet.pl.ViewModel
         [Display(Name = "Podkategoria")]
         public string SubCategory { get; set; }
         public bool State { get; set; }
+        public double TasteOfUser { get; set; } 
     }
 }

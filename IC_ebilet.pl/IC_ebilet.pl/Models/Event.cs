@@ -6,58 +6,6 @@ using System.Web;
 
 namespace IC_ebilet.pl.Models
 {
-    public enum VCategory
-    {
-        Muzyka,
-        Teatr,
-        Sport,
-        Rodzina,
-        Klasyka,
-        Widowiska,
-        Biznes
-    }
-    public enum VSubCategory
-    {
-        Festiwale,
-        Rock,
-        HardHeavy,
-        Pop,
-        Piosenka,
-        JazzBlues,
-        ElektroTechno,
-        DiscoPolo,
-        HipHopRap,
-        Reggae,
-        Ethno,
-        MuzykaPozostałe,
-
-        Komedia,
-        TragediaDramat,
-        Postdramat,
-        KryminalThriller,
-        Musicale,
-        SpektakleMuzyczne,
-        TeatrTanca,
-
-        SportyWalki,
-        SportyMotorowe,
-        SportyDruzynowe,
-        Extreme,
-        SportPozostale,
-
-        SpektakleDlaDzieci,
-        RodzinaPozostale,
-
-        OperaOperetka,
-        BaletTaniec,
-        Koncert,
-
-        Kabarety,
-        RewieShow,
-        WidowiskaInne,
-
-        Targi
-    }
     public class Event
     {
         [Key]
@@ -72,5 +20,6 @@ namespace IC_ebilet.pl.Models
         public string Category { get; set; }
         public string SubCategory { get; set; }
         public bool State { get; set; }
+        public double TasteOfUser { get; set; }
     }
 }

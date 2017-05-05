@@ -5,11 +5,13 @@
 }
 
 @section Banner {
-    <div class="header header-filter headerTopBack" style="background-image: url(../../Content/img/cody-aulidge-194218.jpg);  padding:100px">
-        <div class="container"><h1 style="color: white;">Panel</h1></div>
+    <div class="header header-filter headerTopBack" style="background-image: url(../../Content/img/cody-aulidge-194218.jpg);  padding:100px;">
+        <div class="container"><h1 style="color: white; font-family: 'Open Sans', sans-serif">Panel</h1></div>
     </div>
 }
-<h2>Tablica Ulubionych Kategorii</h2>
+<div class="container">
+    <h2>Tablica Ulubionych Kategorii</h2>
+</div>
 <table class="table">
     <tr>
         <th>
@@ -100,7 +102,7 @@
                 @item.precents
             </td>
             <td>
-                @item.ban
+                @item.ban;
             </td>
         </tr>
     }
